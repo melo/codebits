@@ -60,6 +60,7 @@ my $server = mojo_server undef, 3001, sub {
         <form method="post" action="/send" accept-charset="utf-8">
           <label for="to">JID:</label><input type="text" name="to" id="to" value="$to" size="60"/><br />
           <label for="body">Body:</label><textarea name="body" id="body" cols="50" rows="4">$body</textarea><br />
+          <label for="xml">XML:</label><textarea name="xml" id="xml" cols="50" rows="4">$xml</textarea><br />
           <input type="submit" value="Send!" />
         </form>
       </body>
