@@ -11,17 +11,9 @@ package main;
 
 use strict;
 use warnings;
+use All;
 
-my $bot = ProcessSync->new(
-  jid      => 'sync1@test.simplicidade.org',
-  password => 'teste',
-  host     => '127.0.0.1',
-  port     => 5222,
-  
-  http_port => 3005,
-);
-$bot->start;
-
+my @bots = All->connect_all('ProcessSync');
 
 ProcessSync->run;
 
