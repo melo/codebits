@@ -6,6 +6,8 @@ use base 'Mojo::Base';
 use Net::XMPP2::Client;
 use AnyEvent::Mojo;
 use Encode 'decode';
+use FindBin;
+use lib "$FindBin::Bin/../../lib";
 
 __PACKAGE__->attr([qw( jid password host port http_port http_host )]);
 __PACKAGE__->attr([qw( bot http_server )]);
