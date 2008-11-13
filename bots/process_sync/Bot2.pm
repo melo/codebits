@@ -83,10 +83,7 @@ sub bot_started {
     return unless $self->sync_chatroom;
     
     my $nick = $self->room_nick;
-    if (!$nick) {
-      $nick = split_jid($acc->jid);
-      $nick .= '0';
-    }
+    ($nick) = split_jid($acc->jid) unless $nick;
     
     print STDERR "Joining room ", $self->sync_chatroom, " with nick '$nick'\n";
     
