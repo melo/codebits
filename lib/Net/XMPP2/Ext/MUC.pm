@@ -67,7 +67,7 @@ sub init {
       ext_before_message_xml => sub {
          my ($self, $con, $node) = @_;
          my $from_jid = $node->attr ('from');
-
+         
          if (exists $self->{room_evs}->{prep_bare_jid $from_jid}) {
             $self->stop_event;
             $self->{room_evs}->{prep_bare_jid $from_jid}->handle_message ($node);
@@ -75,7 +75,14 @@ sub init {
       },
       disconnect => sub {
          my ($self) = @_;
-         $self->cleanup
+         $self->cleanup;
+         delete $self->{connection};
+         return;
+      },
+      connected => sub {
+        my ($self, $con) = @_;
+        $self->{connection} = $con;
+        return;
       }
    );
 }
