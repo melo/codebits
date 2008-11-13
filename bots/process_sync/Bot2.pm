@@ -91,7 +91,8 @@ sub bot_started {
       my ($room, $user, $error) = @_;
       
       if ($room) {
-        print STDERR 'Bot ', $acc->jid, ' joined room "', $room->jid, '" with nick "', $user->nick,'"', "\n";
+        my $f_nick = $user->nick;
+        print STDERR 'Bot ', $acc->jid, ' joined room "', $room->jid, qq{" with nick "$f_nick"\n};
         
         $room->reg_cb('message', sub {
           my ($room, $msg, $is_echo) = @_;
@@ -104,8 +105,8 @@ sub bot_started {
           elsif ($msg->is_delayed) {
             $self->muc_history_message($msg);
           }
-          elsif ($trigger && $body =~ m/^$trigger\s*(.+)/) {
-            $self->muc_handle_command($room, $msg, $1)
+          elsif ($trigger && $body =~ m/^($trigger|$nick)\s*(.+)/) {
+            $self->muc_handle_command($room, $msg, $2);
           }
         });
       }
