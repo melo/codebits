@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use LWP::UserAgent;
 use Getopt::Long;
-
+use Encode 'encode';
 
 my %cfg;
 my $ok = GetOptions(\%cfg, "to=s", "body=s" );
@@ -24,6 +24,10 @@ unless ($cfg{body}) {
   print "Type the message to send, CTRL-D to send, CTRL-C to abort\n" if -t \*STDIN;
   local $/;
   $cfg{body} = <>;
+}
+
+while (my ($k, $v) = each %cfg) {
+  $cfg{$k} = encode('utf8', $v);
 }
 
 my $ua = LWP::UserAgent->new;
