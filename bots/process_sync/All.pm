@@ -7,7 +7,7 @@ sub connect_all {
   my ($class, $bot_class) = @_;
   my @bots;
   
-  for(my $n = 1; $n < 6; $n++) {
+  for(my $n = 1; $n <= ($ENV{BOT_COUNT} || 5); $n++) {
     my $bot = $bot_class->new(
       jid      => "sync$n\@test.simplicidade.org",
       password => 'teste',
