@@ -7,7 +7,7 @@ use Getopt::Long;
 use Encode 'encode';
 
 my %cfg;
-my $ok = GetOptions(\%cfg, "to=s", "body=s" );
+my $ok = GetOptions(\%cfg, "to=s", "body=s", "xml=s" );
 usage() unless $ok;
 
 binmode(\*STDIN, ':utf8');
