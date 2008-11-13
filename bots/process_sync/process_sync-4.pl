@@ -20,9 +20,8 @@ my @bots = All->connect_all('ProcessSync',
   bot_name => 'My Sync bot',
   disco_features => [ 'org.simplicidade.codebits2008.sync' ],
   sync_chatroom => 'sync@conference.test.simplicidade.org',
-  command_trigger => qr/dudes[,:]/,
+  command_trigger => 'dudes',
 #  room_nick => 'sync00',
-
 );
 
 ProcessSync->run;

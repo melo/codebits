@@ -105,7 +105,7 @@ sub bot_started {
           elsif ($msg->is_delayed) {
             $self->muc_history_message($msg);
           }
-          elsif ($trigger && $body =~ m/^($trigger|$nick)\s*(.+)/) {
+          elsif ($trigger && $body =~ m/^($trigger|$nick)[,;:!]?\s*(.+)/) {
             $self->muc_handle_command($room, $msg, $2);
           }
         });
