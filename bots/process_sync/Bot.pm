@@ -59,7 +59,7 @@ sub start_bot {
     contact_subscribed        => sub { return $self->bot_contact_subscribed(@_)   },
   );
 
-  $self->bot_started;
+  $self->bot_started($bot);
   
   return;
 }
