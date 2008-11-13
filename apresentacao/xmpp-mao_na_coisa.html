@@ -4,7 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<title>[slide show title here]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   
+<title>XMPP - Mão na Coisa</title>
 <!-- metadata -->
 <meta name="generator" content="S5" />
 <meta name="version" content="S5 1.1" />
@@ -19,6 +21,8 @@
 <link rel="stylesheet" href="ui/default/outline.css" type="text/css" media="screen" id="outlineStyle" />
 <link rel="stylesheet" href="ui/default/print.css" type="text/css" media="print" id="slidePrint" />
 <link rel="stylesheet" href="ui/default/opera.css" type="text/css" media="projection" id="operaFix" />
+<!-- syntax -->
+<link type="text/css" rel="stylesheet" href="ui/default/syntax_hi/Styles/SyntaxHighlighter.css"></link>
 <!-- S5 JS -->
 <script src="ui/default/slides.js" type="text/javascript"></script>
 </head>
@@ -29,8 +33,8 @@
 <div id="currentSlide"><!-- DO NOT EDIT --></div>
 <div id="header"></div>
 <div id="footer">
-<h1>[location/date of presentation]</h1>
-<h2>[slide show title here]</h2>
+<h1>Codebits2008 / 2008-11-13</h1>
+<h2>XMPP - Mão na Coisa</h2>
 </div>
 
 </div>
@@ -39,29 +43,217 @@
 <div class="presentation">
 
 <div class="slide">
-<h1>[slide show title here]</h1>
-<h2>[slide show subtitle here]</h2>
-<h3>[name of presenter]</h3>
-<h4>[affiliation of presenter]</h4>
+<h1>XMPP</h1>
+<h2>Mão na Coisa</h2>
+<h3>Pedro Melo</h3>
+<h4>simplicidade.org / evolui.com</h4>
 </div>
 
 
 <div class="slide">
-<h1>[slide title]</h1>
-<ul>
-<li>[point one]</li>
-<li>[point two]</li>
-<li>[point three]</li>
-<li>[point four]</li>
-<li>[point five]</li>
-</ul>
-<div class="handout">
-[any material that should appear in print but not on the slide]
+  <h1>Resumo</h1>
+  <ul>
+    <li>Conversa da treta</li>
+    <li>Preliminares</li>
+    <li>Mão na Coisa</li>
+    <li>Coisa na Mão</li>
+    <li>Coisa na Coisa</li>
+  </ul>
 </div>
+
+<div class="slide">
+  <h1>Resumo (agora a sério)</h1>
+  <ul>
+    <li>Breve explicação do ambiente</li>
+    <li>Modelo de programação</li>
+    <li>Blocos básicos</li>
+    <li>Pequenos bots</li>
+    <li>Syncronização de processos</li>
+    <li>Real-time feeds</li>
+    <li>Peer-to-peer sync</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Ambiente</h1>
+  <ul>
+    <li>OpenFire no tabuleiro</li>
+    <li>Perl: Net::XMPP2</li>
+    <li>Python: Twisted + Wokkel (Hi Jack!)</li>
+    <li>Ruby: temos pena... Simple::Bot? xmpp4r?</li>
+    <li>Java: Smack</li>
+    <li>C, Loudmouth: Strophe</li>
+    <li>PHP, Class::XMPP</li>
+    <li>JavaScript: Strophe, JsJac</li>
+  </ul>
 </div>
 
 
+<div class="slide">
+  <h1>Modelo de Programação</h1>
+  <ul>
+    <li>Event-driven</li>
+    <li>Nada é garantido, timeouts em todo o lado</li>
+    <li>Closures (em linguagens que as tenham)</li>
+    <li>Event loop: se os tiverem, usem</li>
+    <li>Enviar pedido, callback para quando a resposta chegar</li>
+    <li>Hooks para responder a novos pedidos</li>
+  </ul>
 </div>
+
+<div class="slide">
+  <h1>Blocos básicos</h1>
+  <ul>
+    <li>Três blocos básicos
+	    <ul>
+		  <li>message: fire and forget</li>
+		  <li>iq: pergunta/resposta</li>
+		  <li>presence: broadcast, gestão de buddies</li>
+		</ul>
+	</li>
+    <li>Cada um deles tem atributos comuns
+	  <ul>
+	  	<li>to</li>
+	    <li>from</li>
+	    <li>type</li>
+	    <li>id</li>
+	  </ul>
+    </li>
+    <li>Mas o X em XMPP é de Extensible</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;mesage&gt;</h1>
+  <h2>Uma mensagem comum</h2>
+  <pre name="code" class="xml">
+    &lt;message to="melopt@gmail.com/res" from="melo@simplcidade.org/Tabuleiro" type="chat"&gt;
+       &lt;body&gt;Recebes-te uma mensagem do Paulo! (link)&lt;/body&gt;
+    &lt;/message&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;mesage&gt;</h1>
+  <h2>Agora com uma extensão</h2>
+  <pre name="code" class="xml">
+    &lt;message to="melopt@gmail.com/res" from="melo@simplcidade.org/Tabuleiro" type="chat"&gt;
+       &lt;body&gt;Recebes-te uma mensagem do Paulo! (link)&lt;/body&gt;
+       &lt;n xmlns="org.simplicidade.proj1"&gt;
+	     &lt;from&gt;Paulo&lt;/from&gt;
+	     &lt;link&gt;link&lt;/link&gt;
+	     &lt;reply&gt;reply_link&lt;/reply&gt;
+	   &lt;/n&gt;
+    &lt;/message&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;mesage&gt;</h1>
+  <h2>E já agora para não ficar guardada offline</h2>
+  <pre name="code" class="xml">
+    &lt;message to="melopt@gmail.com/res" from="melo@simplcidade.org/Tabuleiro" type="headline"&gt;
+       &lt;body&gt;Recebes-te uma mensagem do Paulo! (link)&lt;/body&gt;
+       &lt;n xmlns="org.simplicidade.proj1"&gt;
+	     &lt;from&gt;Paulo&lt;/from&gt;
+	     &lt;link&gt;link&lt;/link&gt;
+	     &lt;reply&gt;reply_link&lt;/reply&gt;
+	   &lt;/n&gt;
+    &lt;/message&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;iq&gt; (get)</h1>
+  <h2>Pergunta...</h2>
+  <pre name="code" class="xml">
+	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="get" id="1"&gt;
+	  &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
+	&lt;/iq&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;iq&gt;</h1>
+  <h2>Resposta...</h2>
+  <pre name="code" class="xml">
+	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="1"&gt;
+      &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
+        &lt;campo1&gt;valor 1&lt;/campo1&gt;
+        &lt;campo2&gt;valor 2&lt;/campo2&gt;
+        &lt;campo3&gt;valor 3&lt;/campo3&gt;
+        &lt;campo4&gt;valor 4&lt;/campo4&gt;
+      &lt;/query&gt;
+	&lt;/iq&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;iq&gt; (set)</h1>
+  <h2>Alteração...</h2>
+  <pre name="code" class="xml">
+	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="set" id="2"&gt;
+      &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
+        &lt;campo1&gt;valor 1&lt;/campo1&gt;
+        &lt;campo2&gt;valor 2&lt;/campo2&gt;
+        &lt;campo3&gt;valor 3&lt;/campo3&gt;
+        &lt;campo4&gt;valor 4&lt;/campo4&gt;
+      &lt;/query&gt;
+	&lt;/iq&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Blocos básicos: &lt;iq&gt;</h1>
+  <h2>Resposta...</h2>
+  <pre name="code" class="xml">
+	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="2"&gt;
+      &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
+	&lt;/iq&gt;
+  </pre>
+</div>
+
+<div class="slide">
+  <h1>Tipos de ligação</h1>
+  <ul>
+  	<li>Cliente-Servidor: usadas por utilizadores
+	  <ul>
+	  	<li>Apenas um Jabber ID: local@domain/resource</li>
+	    <li>Limitado em termos de números de buddies</li>
+	    <li>Mas vários promenores são tratados por nós</li>
+	  </ul>
+    </li>
+  	<li>Component-Servidor: usadas por aplicações mais avançadas
+	  <ul>
+	  	<li>Represente um ou mais dominios (ex. teste.simplicidade.org)</li>
+	    <li>Ilimitado em termos de buddies ou de users @teste.simplicidade.org</li>
+	    <li>Responsabilidade de implementar o protocolo todo</li>
+	  </ul>
+	</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h1>Pequenos bots</h1>
+  <h2>http2xmpp.pl</h2>
+  <ul>
+  	<li>Bot simples, ligação normal de cliente</li>
+  	<li>Subscrição automática</li>
+    <li>Mensagem de boas vindas</li>
+  	<li>HTTP POST =&gt; XMPP message</li>
+  </ul>
+</div>
+
+</div>
+
+<!-- enable syntax highligth -->
+<script language="javascript" src="ui/default/syntax_hi/Scripts/shCore.js"></script>
+<script language="javascript" src="ui/default/syntax_hi/Scripts/shBrushCSharp.js"></script>
+<script language="javascript" src="ui/default/syntax_hi/Scripts/shBrushXml.js"></script>
+<script language="javascript">
+dp.SyntaxHighlighter.ClipboardSwf = 'ui/default/syntax_hi/Scripts/clipboard.swf';
+dp.SyntaxHighlighter.HighlightAll('code');
+</script>
 
 </body>
 </html>
