@@ -1,17 +1,23 @@
-package Bot;
+package Bot2;
 
 use strict;
 use warnings;
 use base 'Mojo::Base';
 use Net::XMPP2::Client;
+use Net::XMPP2::Ext::Disco;
+use Net::XMPP2::Ext::MUC;
+use Net::XMPP2::Util qw( split_jid );
 use AnyEvent::Mojo;
 use Encode 'decode';
 use FindBin;
 use lib "$FindBin::Bin/../../lib";
 
-__PACKAGE__->attr([qw( jid password host port http_port http_host )]);
+__PACKAGE__->attr([qw( jid password host port http_port http_host bot_name )]);
 __PACKAGE__->attr([qw( bot http_server )]);
 __PACKAGE__->attr([qw( stop_cond )]);
+__PACKAGE__->attr([qw( disco_ext muc_ext )]);
+__PACKAGE__->attr([qw( disco_features )], default => []);
+
 __PACKAGE__->attr('debug', default => sub { return $ENV{DEBUG} });
 
 ##################
@@ -59,6 +65,7 @@ sub start_bot {
     contact_subscribed        => sub { return $self->bot_contact_subscribed(@_)   },
   );
 
+  $self->bot_load_extensions($bot);
   $self->bot_started($bot);
   
   return;
@@ -87,6 +94,26 @@ sub bot_reconnect {
   );
   
   return;
+}
+
+sub bot_load_extensions {
+  my ($self, $bot) = @_;
+  
+  # DISCO, a good XMPP citizen
+  my $disco = Net::XMPP2::Ext::Disco->new;
+  $self->disco_ext($disco);
+  $bot->add_extension($disco);
+  $disco->set_identity('client', 'bot', $self->bot_name);
+  if (my $feats = $self->disco_features) {
+    foreach my $feat (@$feats) {
+      $disco->enable_feature($feat);
+    }
+  }
+  
+  # Make sure we support MUC
+  my $muc = Net::XMPP2::Ext::MUC->new( disco => $disco );
+  $self->muc_ext($muc);
+  $bot->add_extension($muc);
 }
 
 sub bot_subscription_request {
