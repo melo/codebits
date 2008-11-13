@@ -2,6 +2,8 @@ package Bot2;
 
 use strict;
 use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../../lib";
 use base 'Mojo::Base';
 use Net::XMPP2::Client;
 use Net::XMPP2::Ext::Disco;
@@ -9,14 +11,13 @@ use Net::XMPP2::Ext::MUC;
 use Net::XMPP2::Util qw( split_jid );
 use AnyEvent::Mojo;
 use Encode 'decode';
-use FindBin;
-use lib "$FindBin::Bin/../../lib";
 
 __PACKAGE__->attr([qw( jid password host port http_port http_host bot_name )]);
 __PACKAGE__->attr([qw( bot http_server )]);
 __PACKAGE__->attr([qw( stop_cond )]);
 __PACKAGE__->attr([qw( disco_ext muc_ext )]);
 __PACKAGE__->attr([qw( disco_features )], default => []);
+__PACKAGE__->attr([qw( sync_chatroom room_nick command_trigger )]);
 
 __PACKAGE__->attr('debug', default => sub { return $ENV{DEBUG} });
 
@@ -72,7 +73,61 @@ sub start_bot {
 }
 
 # Override to hook more stuff
-sub bot_started {}
+sub bot_started {
+  my ($self, $bot) = @_;
+  
+  # Auto-Connect to room
+  $bot->reg_cb('after_connected', sub {
+    my ($bot, $acc) = @_;
+    
+    return unless $self->sync_chatroom;
+    
+    my $nick = $self->room_nick;
+    if (!$nick) {
+      $nick = split_jid($acc->jid);
+      $nick .= '0';
+    }
+    
+    print STDERR "Joining room ", $self->sync_chatroom, " with nick '$nick'\n";
+    
+    $self->muc_ext->join_room($self->sync_chatroom, $nick, sub {
+      my ($room, $user, $error) = @_;
+      
+      if ($room) {
+        print STDERR 'Bot ', $acc->jid, ' joined room "', $room->jid, '" with nick "', $user->nick,'"', "\n";
+        
+        $room->reg_cb('message', sub {
+          my ($room, $msg, $is_echo) = @_;
+          my $body = $msg->body;
+          my $trigger = $self->command_trigger;
+          
+          if ($is_echo) {
+            $self->muc_echo_message($room, $msg);
+          }
+          elsif ($msg->is_delayed) {
+            $self->muc_history_message($msg);
+          }
+          elsif ($trigger && $body =~ m/^$trigger\s*(.+)/) {
+            $self->muc_handle_command($room, $msg, $1)
+          }
+        });
+      }
+      else {
+        print STDERR 'FAILED joining room ', $self->sync_chatroom, ', reason "', $error->type ,'"', "\n";
+      }
+    
+      return;
+    },
+    nickcollision_cb => sub {
+      my $collided_nick = shift;
+      print STDERR "Oops, nick '$collided_nick' collided; ";
+      $collided_nick++;
+      print STDERR "trying this one now '$collided_nick'\n";
+      return $collided_nick;
+    });
+  });
+
+}
 
 sub bot_connected {
   my ($self, $bot, $acc) = @_;
@@ -133,6 +188,23 @@ sub bot_contact_subscribed {
   return;
 }
 
+sub muc_echo_message {}
+
+sub muc_history_message {}
+
+sub muc_handle_command {
+  my ($self, $room, $msg, $command) = @_;
+ 
+  $self->muc_handle_command_unknown($room, $msg, $command);
+}
+
+sub muc_handle_command_unknown {
+  my ($self, $room, $msg, $command) = @_;
+  
+  my $reply = $msg->make_reply;
+  $reply->add_body("Yo, mike! No can do '$command'");
+  $reply->send;
+}
 
 #############
 # HTTP server
