@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -63,7 +63,7 @@
 
 <div class="slide">
   <h1>Resumo (agora a sério)</h1>
-  <ul>
+  <ul class="incremental">
     <li>Breve explicação do ambiente</li>
     <li>Modelo de programação</li>
     <li>Blocos básicos</li>
@@ -105,19 +105,19 @@
   <h1>Blocos básicos</h1>
   <ul>
     <li>Três blocos básicos
-	    <ul>
-		  <li>message: fire and forget</li>
-		  <li>iq: pergunta/resposta</li>
-		  <li>presence: broadcast, gestão de buddies</li>
-		</ul>
-	</li>
+      <ul>
+      <li>message: fire and forget</li>
+      <li>iq: pergunta/resposta</li>
+      <li>presence: broadcast, gestão de buddies</li>
+    </ul>
+  </li>
     <li>Cada um deles tem atributos comuns
-	  <ul>
-	  	<li>to</li>
-	    <li>from</li>
-	    <li>type</li>
-	    <li>id</li>
-	  </ul>
+    <ul>
+      <li>to</li>
+      <li>from</li>
+      <li>type</li>
+      <li>id</li>
+    </ul>
     </li>
     <li>Mas o X em XMPP é de Extensible</li>
   </ul>
@@ -140,10 +140,10 @@
     &lt;message to="melopt@gmail.com/res" from="melo@simplcidade.org/Tabuleiro" type="chat"&gt;
        &lt;body&gt;Recebes-te uma mensagem do Paulo! (link)&lt;/body&gt;
        &lt;n xmlns="org.simplicidade.proj1"&gt;
-	     &lt;from&gt;Paulo&lt;/from&gt;
-	     &lt;link&gt;link&lt;/link&gt;
-	     &lt;reply&gt;reply_link&lt;/reply&gt;
-	   &lt;/n&gt;
+         &lt;from&gt;Paulo&lt;/from&gt;
+         &lt;link&gt;link&lt;/link&gt;
+         &lt;reply&gt;reply_link&lt;/reply&gt;
+       &lt;/n&gt;
     &lt;/message&gt;
   </pre>
 </div>
@@ -155,10 +155,10 @@
     &lt;message to="melopt@gmail.com/res" from="melo@simplcidade.org/Tabuleiro" type="headline"&gt;
        &lt;body&gt;Recebes-te uma mensagem do Paulo! (link)&lt;/body&gt;
        &lt;n xmlns="org.simplicidade.proj1"&gt;
-	     &lt;from&gt;Paulo&lt;/from&gt;
-	     &lt;link&gt;link&lt;/link&gt;
-	     &lt;reply&gt;reply_link&lt;/reply&gt;
-	   &lt;/n&gt;
+         &lt;from&gt;Paulo&lt;/from&gt;
+         &lt;link&gt;link&lt;/link&gt;
+         &lt;reply&gt;reply_link&lt;/reply&gt;
+       &lt;/n&gt;
     &lt;/message&gt;
   </pre>
 </div>
@@ -167,9 +167,9 @@
   <h1>Blocos básicos: &lt;iq&gt; (get)</h1>
   <h2>Pergunta...</h2>
   <pre name="code" class="xml">
-	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="get" id="1"&gt;
-	  &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
-	&lt;/iq&gt;
+    &lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="get" id="1"&gt;
+      &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
+    &lt;/iq&gt;
   </pre>
 </div>
 
@@ -177,14 +177,14 @@
   <h1>Blocos básicos: &lt;iq&gt;</h1>
   <h2>Resposta...</h2>
   <pre name="code" class="xml">
-	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="1"&gt;
-      &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
-        &lt;campo1&gt;valor 1&lt;/campo1&gt;
-        &lt;campo2&gt;valor 2&lt;/campo2&gt;
-        &lt;campo3&gt;valor 3&lt;/campo3&gt;
-        &lt;campo4&gt;valor 4&lt;/campo4&gt;
-      &lt;/query&gt;
-	&lt;/iq&gt;
+    &lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="1"&gt;
+        &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
+          &lt;campo1&gt;valor 1&lt;/campo1&gt;
+          &lt;campo2&gt;valor 2&lt;/campo2&gt;
+          &lt;campo3&gt;valor 3&lt;/campo3&gt;
+          &lt;campo4&gt;valor 4&lt;/campo4&gt;
+        &lt;/query&gt;
+    &lt;/iq&gt;
   </pre>
 </div>
 
@@ -192,14 +192,14 @@
   <h1>Blocos básicos: &lt;iq&gt; (set)</h1>
   <h2>Alteração...</h2>
   <pre name="code" class="xml">
-	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="set" id="2"&gt;
-      &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
-        &lt;campo1&gt;valor 1&lt;/campo1&gt;
-        &lt;campo2&gt;valor 2&lt;/campo2&gt;
-        &lt;campo3&gt;valor 3&lt;/campo3&gt;
-        &lt;campo4&gt;valor 4&lt;/campo4&gt;
-      &lt;/query&gt;
-	&lt;/iq&gt;
+    &lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="set" id="2"&gt;
+        &lt;query xmlns="org.simplicidade.proj1.proto1"&gt;
+          &lt;campo1&gt;valor 1&lt;/campo1&gt;
+          &lt;campo2&gt;valor 2&lt;/campo2&gt;
+          &lt;campo3&gt;valor 3&lt;/campo3&gt;
+          &lt;campo4&gt;valor 4&lt;/campo4&gt;
+        &lt;/query&gt;
+    &lt;/iq&gt;
   </pre>
 </div>
 
@@ -207,29 +207,29 @@
   <h1>Blocos básicos: &lt;iq&gt;</h1>
   <h2>Resposta...</h2>
   <pre name="code" class="xml">
-	&lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="2"&gt;
-      &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
-	&lt;/iq&gt;
+    &lt;iq to="melopt@gmail.com/res" from="melo@simplicidade.org/Tabuleiro" type="result" id="2"&gt;
+        &lt;query xmlns="org.simplicidade.proj1.proto1" /&gt;
+    &lt;/iq&gt;
   </pre>
 </div>
 
 <div class="slide">
   <h1>Tipos de ligação</h1>
   <ul>
-  	<li>Cliente-Servidor: usadas por utilizadores
-	  <ul>
-	  	<li>Apenas um Jabber ID: local@domain/resource</li>
-	    <li>Limitado em termos de números de buddies</li>
-	    <li>Mas vários promenores são tratados por nós</li>
-	  </ul>
+    <li>Cliente-Servidor: usadas por utilizadores
+    <ul>
+      <li>Apenas um Jabber ID: local@domain/resource</li>
+      <li>Limitado em termos de números de buddies</li>
+      <li>Mas vários promenores são tratados por nós</li>
+    </ul>
     </li>
-  	<li>Component-Servidor: usadas por aplicações mais avançadas
-	  <ul>
-	  	<li>Represente um ou mais dominios (ex. teste.simplicidade.org)</li>
-	    <li>Ilimitado em termos de buddies ou de users @teste.simplicidade.org</li>
-	    <li>Responsabilidade de implementar o protocolo todo</li>
-	  </ul>
-	</li>
+    <li>Component-Servidor: usadas por aplicações mais avançadas
+    <ul>
+      <li>Represente um ou mais dominios (ex. teste.simplicidade.org)</li>
+      <li>Ilimitado em termos de buddies ou de users @teste.simplicidade.org</li>
+      <li>Responsabilidade de implementar o protocolo todo</li>
+    </ul>
+  </li>
   </ul>
 </div>
 
@@ -237,10 +237,10 @@
   <h1>Pequenos bots</h1>
   <h2>http2xmpp.pl</h2>
   <ul>
-  	<li>Bot simples, ligação normal de cliente</li>
-  	<li>Subscrição automática</li>
+    <li>Bot simples, ligação normal de cliente</li>
+    <li>Subscrição automática</li>
     <li>Mensagem de boas vindas</li>
-  	<li>HTTP POST =&gt; XMPP message</li>
+    <li>HTTP POST =&gt; XMPP message</li>
   </ul>
   <p>Arrancar o http2xmpp-N.pl e aceder ao <a href="http://127.0.0.1:3001/">interface web</a></p>
 </div>
