@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 #
-# Testar com 
-#   ./http2xmpp-send.pl --to=melo@test.simplicidade.org --body='olas' --xml='<n xmlns="ola"><campo>valor</campo></n>'
+# Auto-reconnect
 #
 
 use strict;
@@ -42,6 +41,23 @@ $bot->reg_cb('contact_subscribed', sub {
   
   return;
 });
+
+$bot->reg_cb('connect_error', \&_reconnect);
+$bot->reg_cb('error', \&_reconnect);
+
+sub _reconnect {
+  my ($bot) = @_;
+  
+  my $t; $t = AnyEvent->timer(
+    after => .5,
+    cb => sub {
+      $bot->update_connections;
+      undef $t;
+    }
+  );
+  
+  return;
+}
 
 
 # Start a HTTP server
