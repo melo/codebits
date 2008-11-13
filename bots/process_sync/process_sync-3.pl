@@ -72,14 +72,12 @@ sub bot_started {
     
       return;
     },
-    {
-      nickcollision_cb => sub {
-        my $collided_nick = shift;
-        print STDERR "Oops, nick '$collided_nick' collided; ";
-        $collided_nick++;
-        print STDERR "trying this one now '$collided_nick'\n";
-        return $collided_nick;
-      },
+    nickcollision_cb => sub {
+      my $collided_nick = shift;
+      print STDERR "Oops, nick '$collided_nick' collided; ";
+      $collided_nick++;
+      print STDERR "trying this one now '$collided_nick'\n";
+      return $collided_nick;
     });
   });
 }
