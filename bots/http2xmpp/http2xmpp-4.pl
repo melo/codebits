@@ -11,9 +11,37 @@ use AnyEvent::Mojo;
 use Encode 'decode';
 
 # Start a small bot
-my $bot = Net::XMPP2::Client->new;
+my $bot = Net::XMPP2::Client->new(debug => $ENV{DEBUG});
 $bot->add_account('http2xmpp@test.simplicidade.org', 'teste', '127.0.0.1', 5222);
 $bot->start;
+
+# When one account connects...
+$bot->reg_cb('connected', sub {
+  my (undef, $acc) = @_;
+
+  print STDERR "Connected ",$acc->jid,"\n";
+
+  return;
+});
+
+# When someone wants a piece of me...
+$bot->reg_cb('contact_request_subscribe', sub {
+  my (undef, $acc, $roster, $contact) = @_;
+  
+  $contact->send_subscribed;
+  $contact->send_subscribe;
+
+  return;
+});
+
+# When they have a piece of me...
+$bot->reg_cb('contact_subscribed', sub {
+  my ($bot, $acc, $roster, $contact) = @_;
+  
+  $bot->send_message('Welcome!', $contact->jid, undef, 'chat');
+  
+  return;
+});
 
 
 # Start a HTTP server
