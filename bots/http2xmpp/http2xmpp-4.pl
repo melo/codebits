@@ -1,7 +1,6 @@
 #!/usr/bin/env perl
 #
-# Testar com 
-#   ./http2xmpp-send.pl --to=melo@test.simplicidade.org --body='olas' --xml='<n xmlns="ola"><campo>valor</campo></n>'
+# Connected message, auto-accept subscriptions, welcome message
 #
 
 use strict;

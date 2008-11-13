@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+#
+# Better form
+# 
 
 use strict;
 use warnings;
