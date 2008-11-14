@@ -14,8 +14,6 @@ sub connect_all {
       host     => '127.0.0.1',
       port     => 5222,
 
-      http_port => 3004 + $n,
-      
       %extra_args,
     );
     
