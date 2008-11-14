@@ -77,7 +77,7 @@ sub send {
       if $self->thread;
 
    $self->{connection}->send_message (
-      $self->to, $self->type, undef,
+      $self->to, $self->type, $self->{create_cbs},
       body => $self->{bodies},
       @add
    );
