@@ -141,7 +141,10 @@ sub from_node {
    $self->{thread}   = $thread;
    $self->{bodies}   = \%bodies;
    $self->{subjects} = \%subjects;
+   $self->{node}     = $node;
 }
+
+sub node { return $_[0]{node} }
 
 sub to_string {
    my ($self) = @_;
