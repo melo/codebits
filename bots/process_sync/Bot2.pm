@@ -16,7 +16,7 @@ __PACKAGE__->attr([qw( jid password host port http_port http_host bot_name )]);
 __PACKAGE__->attr([qw( bot http_server )]);
 __PACKAGE__->attr([qw( stop_cond )]);
 __PACKAGE__->attr([qw( disco_ext muc_ext )]);
-__PACKAGE__->attr([qw( disco_features )], default => []);
+__PACKAGE__->attr([qw( disco_features )], default => sub { [] });
 __PACKAGE__->attr([qw( sync_chatroom room_nick command_trigger )]);
 
 __PACKAGE__->attr('debug', default => sub { return $ENV{DEBUG} });
