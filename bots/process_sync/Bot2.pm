@@ -18,6 +18,9 @@ __PACKAGE__->attr([qw( stop_cond )]);
 __PACKAGE__->attr([qw( disco_ext muc_ext )]);
 __PACKAGE__->attr([qw( disco_features )], default => sub { [] });
 __PACKAGE__->attr([qw( sync_chatroom room_nick command_trigger )]);
+__PACKAGE__->attr([qw( ns_triggers )], default => sub { {} });
+__PACKAGE__->attr([qw( ns_triggers_cache )]);
+__PACKAGE__->attr([qw( ns_next_trigger_id )], default => 1);
 
 __PACKAGE__->attr('debug', default => sub { return $ENV{DEBUG} });
 
@@ -107,6 +110,9 @@ sub bot_started {
           }
           elsif ($trigger && $body =~ m/^($trigger|$nick)[,;:!]?\s*(.+)/) {
             $self->muc_handle_command($room, $msg, $2);
+          }
+          else {
+            $self->check_for_namespace_trigger($room, $msg);
           }
         });
       }
@@ -202,6 +208,60 @@ sub muc_handle_command_unknown {
   my $reply = $msg->make_reply;
   $reply->add_body("Yo, mike! No can do '$command'");
   $reply->send;
+}
+
+# Namespace triggers
+sub reg_ns_trigger {
+  my ($self, $ns, $cb) = @_;
+  my $ns_triggers = $self->ns_triggers;
+
+  my $id = $self->ns_next_trigger_id;
+  $self->ns_next_trigger_id($id+1);
+  
+  $ns_triggers->{$id} = {
+    ns => $ns,
+    cb => $cb,
+    id => $id,
+  };
+  $self->ns_triggers_cache(undef);
+  
+  return $id;
+}
+
+sub unreg_ns_trigger {
+  my ($self, $trg_id) = @_;
+  my $ns_triggers = $self->ns_triggers;
+
+  return unless $trg_id;
+
+  my $trg = delete $ns_triggers->{$trg_id};
+  $self->ns_triggers_cache(undef) if $trg;
+  
+  return $trg;
+}
+
+sub check_for_namespace_trigger {
+  my ($self, $room, $msg) = @_;
+
+  my $ns_trg_cache = $self->ns_triggers_cache;
+  if (!$ns_trg_cache) {
+    my $ns_triggers = $self->ns_triggers;
+    foreach my $trg (values %$ns_triggers) {
+      push @{$ns_trg_cache->{$trg->{ns}}}, $trg;
+    }
+    $self->ns_triggers_cache($ns_trg_cache);
+  }
+  
+  foreach my $node ($msg->node->nodes) {
+    my $ns = $node->namespace;
+    next unless exists $ns_trg_cache->{$ns};
+    
+    foreach my $trg (@{$ns_trg_cache->{$ns}}) {
+      $trg->{cb}->($self, $room, $msg, $node, $trg);
+    }
+  }
+  
+  return;
 }
 
 #############
