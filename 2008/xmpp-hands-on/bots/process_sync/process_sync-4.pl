@@ -192,7 +192,9 @@ sub do_thy_master_bidding {
       my $msg = $room->make_message;
       $msg->add_body("My claim to the top dog is: $claim");
       $msg->append_creation(sub {
-        $_[0]->raw(qq{<task xmlns='org.simplicidade.just-do-it' id='$task_id'><claim>$claim</claim></task>});
+        $_[0]->raw(qq{<task xmlns='org.simplicidade.just-do-it' id='$task_id'>
+          <claim>$claim</claim>
+          </task>});
       });
       $msg->send;
       
@@ -260,7 +262,10 @@ sub do_thy_master_bidding {
                 $bow_msg->add_body("Mercy, please... I bow before thee, oh great $pred");
                 $bow_msg->append_creation(sub {
                   _exml($pred);
-                  $_[0]->raw(qq{<task xmlns='org.simplicidade.just-do-it' id='$task_id'><bow>$pred</bow></task>});
+                  $_[0]->raw(qq{
+                    <task xmlns='org.simplicidade.just-do-it' id='$task_id'>
+                    <bow>$pred</bow>
+                    </task>});
                 });
                 $bow_msg->send;
                 
@@ -288,7 +293,8 @@ sub _do_task {
       my $do_msg = $room->make_message;
       $do_msg->add_body("Yay! My turn to do '$task->{cmd}'... Oh, so nice...");
       $do_msg->append_creation(sub {
-        $_[0]->raw(qq{<task xmlns='org.simplicidade.just-do-it' id='$task->{id}'><done /></task>});
+        $_[0]->raw(qq{<task xmlns='org.simplicidade.just-do-it' id='$task->{id}'>
+        <done /></task>});
       });
       $do_msg->send;
 
