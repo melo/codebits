@@ -26,10 +26,6 @@ sub muc_handle_command {
   }
   elsif ($cmd =~ m/^\s*yo\s*[?!]?\s*$/i) {
     $reply = $msg->make_reply;
-    $reply->add_body("Yo-Yo-Ma Rules!");
-  }
-  elsif ($cmd =~ m/^\s*yo\s*[?!]?\s*$/i) {
-    $reply = $msg->make_reply;
     $reply->add_body("#anita Rules!");
   }
   elsif ($cmd =~ m/^\s*ftw\s*[?!]?\s*$/i) {
