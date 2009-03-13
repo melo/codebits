@@ -1,0 +1,58 @@
+% my ($p) = @_;
+<html>
+<head>
+	<title>I like to sync data! - <%= $p->{jid} %></title>
+</head>
+<body>
+	<h1>Keep it in sync!</h1>
+
+	<div id="canvas"><p>This part is where the magic happens...</p></div>
+
+	<h3>Shout!</h3>
+	<form action="/shout" method="post" accept-charset="utf-8">
+		<p><textarea id="message" name="message" rows="8" cols="40"></textarea></p>
+		<p><input id="btn_shout" type="submit" value="Shout! &rarr;"></p>
+	</form>
+
+
+<!-- JavaScript, the good parts -->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js
+" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" charset="utf-8">
+	$(function() {
+		$('#btn_shout').click(function () {
+			var msg = $('#message')[0].value;
+			if (msg) {
+			    update_canvas(msg);
+				$.post('/shout', msg);
+			}
+			
+			return false;
+		});
+
+		// Listen for updates
+	    function listen_for_remote_updates () {
+		  $.get('/shout', {}, on_remote_update, 'text');
+	    }
+
+		function on_remote_update (data, status) {
+			if (data) {
+				update_canvas(data);
+			}
+			listen_for_remote_updates();
+		}
+
+		function update_canvas (msg) {
+			var html = '<b><%= $p->{jid} %> shouts:</b><p>'
+			         + msg
+			         + '</p>';
+			$('#canvas').html(html);
+		}
+		
+		listen_for_remote_updates();
+	});
+</script>
+</body>
+</html>
